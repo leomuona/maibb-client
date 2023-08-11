@@ -4,6 +4,7 @@ import { RouteObject } from "react-router-dom";
 import { Root } from "./Root";
 import { rootLoader } from "./loaders/rootLoader";
 import { ErrorPage } from "./pages/ErrorPage";
+import { HomePage } from "./pages/HomePage";
 import { ROUTES } from "./routes";
 
 export function createRoutes(queryClient: QueryClient): RouteObject[] {
@@ -13,6 +14,12 @@ export function createRoutes(queryClient: QueryClient): RouteObject[] {
       loader: rootLoader(queryClient),
       element: <Root />,
       errorElement: <ErrorPage />,
+      children: [
+        {
+          index: true,
+          element: <HomePage />,
+        },
+      ],
     },
   ];
 
