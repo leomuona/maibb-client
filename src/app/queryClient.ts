@@ -1,5 +1,5 @@
-import { Logger, QueryClient } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 
-export function createQueryClient(logger?: Logger): QueryClient {
-  return new QueryClient({ logger });
+export function createQueryClient(): QueryClient {
+  return new QueryClient();
 }

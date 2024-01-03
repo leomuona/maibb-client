@@ -5,7 +5,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { createRoutes } from "./app/createRoutes";
 import { createQueryClient } from "./app/queryClient";
 
-// rome-ignore lint/style/noNonNullAssertion: there should always be root
+// biome-ignore lint/style/noNonNullAssertion: there should always be root
 const container = document.getElementById("root")!;
 const root = ReactDOM.createRoot(container);
 
