@@ -37,6 +37,7 @@
     "react-scripts": "5.0.1"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@biomejs/biome": "1.4.1",
     "@testing-library/jest-dom": "^6.1.6",
     "@testing-library/react": "^14.1.2",
