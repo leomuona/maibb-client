@@ -1,5 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import { defer } from "react-router-dom";
+import { authenticatedUserRequest } from "../api/authentication";
+import { getToken } from "../auth/token";
 import { Loader } from "./loader";
 
 export const rootLoader: Loader = (queryClient: QueryClient) => async () =>
@@ -13,7 +15,16 @@ function loadData(queryClient: QueryClient) {
   };
 }
 
-async function getAuthenticatedUser(_queryClient: QueryClient) {
-  // TODO
-  return null;
+async function getAuthenticatedUser(queryClient: QueryClient) {
+  try {
+    const token = await getToken(queryClient);
+
+    return await queryClient.fetchQuery({
+      queryKey: ["authenticatedUser", token],
+      queryFn: async () => await authenticatedUserRequest(token),
+      staleTime: 600000, // 10 minutes
+    });
+  } catch (_e) {
+    return null;
+  }
 }
