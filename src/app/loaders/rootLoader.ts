@@ -17,7 +17,7 @@ function loadData(queryClient: QueryClient) {
 
 async function getAuthenticatedUser(queryClient: QueryClient) {
   try {
-    const token = await getToken(queryClient);
+    const token = await getToken();
 
     return await queryClient.fetchQuery({
       queryKey: ["authenticatedUser", token],

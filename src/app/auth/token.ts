@@ -1,4 +1,3 @@
-import { QueryClient } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
 import { refreshTokenRequest } from "../api/authentication";
 
@@ -14,17 +13,13 @@ let token: string | null = null;
 let decodedToken: DecodedToken | null = null;
 
 // throws error if refresh fails
-export async function getToken(queryClient: QueryClient): Promise<string> {
+export async function getToken(): Promise<string> {
   if (token && decodedToken && !isExpired(decodedToken)) {
     return token;
   }
 
   try {
-    const newToken = await queryClient.fetchQuery({
-      queryKey: ["token", token],
-      queryFn: async () => await refreshTokenRequest(),
-    });
-
+    const newToken = await refreshTokenRequest();
     setToken(newToken);
 
     return newToken;
@@ -42,7 +37,7 @@ export function setToken(newToken: string): void {
   token = newToken;
 }
 
-function clearToken(): void {
+export function clearToken(): void {
   token = null;
   decodedToken = null;
 }

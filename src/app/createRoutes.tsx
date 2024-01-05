@@ -5,6 +5,8 @@ import { Root } from "./Root";
 import { rootLoader } from "./loaders/rootLoader";
 import { ErrorPage } from "./pages/ErrorPage";
 import { HomePage } from "./pages/HomePage";
+import { LoginPage } from "./pages/LoginPage";
+import { Logout } from "./pages/Logout";
 import { ROUTES } from "./routes";
 
 export function createRoutes(queryClient: QueryClient): RouteObject[] {
@@ -18,6 +20,14 @@ export function createRoutes(queryClient: QueryClient): RouteObject[] {
         {
           index: true,
           element: <HomePage />,
+        },
+        {
+          path: ROUTES.login,
+          element: <LoginPage />,
+        },
+        {
+          path: ROUTES.logout,
+          element: <Logout />,
         },
       ],
     },

@@ -31,6 +31,14 @@ export async function refreshTokenRequest(): Promise<string> {
   return response.data.token;
 }
 
+export async function logoutRequest(token: string): Promise<boolean> {
+  const response = await getApiClient(token).get("/auth/logout", {
+    withCredentials: true, // clear refresh token
+  });
+
+  return response.status === 200;
+}
+
 export async function authenticatedUserRequest(
   token: string,
 ): Promise<AuthenticatedUser> {
