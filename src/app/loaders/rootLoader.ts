@@ -1,30 +1,22 @@
 import { QueryClient } from "@tanstack/react-query";
 import { defer } from "react-router-dom";
-import { authenticatedUserRequest } from "../api/authentication";
-import { getToken } from "../auth/token";
+import { handleAuthToken } from "../auth/token";
+import { AuthState } from "../authProvider";
 import { Loader } from "./loader";
 
-export const rootLoader: Loader = (queryClient: QueryClient) => async () =>
-  defer(loadData(queryClient));
+export const rootLoader: Loader =
+  (auth: AuthState, queryClient: QueryClient) => async () =>
+    defer(loadData(auth, queryClient));
 
 export type RootLoaderReturnType = ReturnType<typeof loadData>;
 
-function loadData(queryClient: QueryClient) {
+function loadData(auth: AuthState, queryClient: QueryClient) {
   return {
-    authenticatedUser: getAuthenticatedUser(queryClient),
+    authentication: loadAuthentication(auth, queryClient),
   };
 }
 
-async function getAuthenticatedUser(queryClient: QueryClient) {
-  try {
-    const token = await getToken();
-
-    return await queryClient.fetchQuery({
-      queryKey: ["authenticatedUser", token],
-      queryFn: async () => await authenticatedUserRequest(token),
-      staleTime: 600000, // 10 minutes
-    });
-  } catch (_e) {
-    return null;
-  }
+async function loadAuthentication(auth: AuthState, queryClient: QueryClient) {
+  await handleAuthToken(auth, queryClient);
+  return true;
 }

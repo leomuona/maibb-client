@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
-import { useAuthenticatedUser } from "../Root";
+import { useAuth } from "../authProvider";
 import { ROUTES } from "../routes";
 
 export function HomePage(): JSX.Element {
-  const authenticatedUser = useAuthenticatedUser();
+  const { authenticatedUser } = useAuth();
 
   const welcomeText = authenticatedUser
     ? `Moikkulis ${authenticatedUser.name}!`
     : "Tervetuloa!";
   const showLoginLink = !authenticatedUser;
-  const showLogoutLink = !!authenticatedUser;
+  const showAuthenticatedLinks = !!authenticatedUser;
 
   return (
     <div>
@@ -20,10 +20,15 @@ export function HomePage(): JSX.Element {
           <Link to={ROUTES.login}>Kirjaudu sisään</Link>
         </p>
       )}
-      {showLogoutLink && (
-        <p>
-          <Link to={ROUTES.logout}>Kirjaudu ulos</Link>
-        </p>
+      {showAuthenticatedLinks && (
+        <>
+          <p>
+            <Link to={ROUTES.user}>Käyttäjäsivulle</Link>
+          </p>
+          <p>
+            <Link to={ROUTES.logout}>Kirjaudu ulos</Link>
+          </p>
+        </>
       )}
     </div>
   );

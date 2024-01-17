@@ -1,17 +1,32 @@
+import { QueryClient } from "@tanstack/react-query";
 import { loginRequest } from "../api/authentication";
-import { setToken } from "./token";
+import { AuthState } from "../authProvider";
+import { getExpiration } from "./token";
+import { fetchAuthenticatedUser } from "./user";
 
 export async function login(
   username: string,
   password: string,
+  auth: AuthState,
+  queryClient: QueryClient,
 ): Promise<boolean> {
+  const { setToken, setAuthenticatedUser, setRefresh } = auth;
   try {
-    const response = await loginRequest(username, password);
-    setToken(response);
+    const token = await loginRequest(username, password);
+    const exp = getExpiration(token);
+    setToken({ token, exp });
+
+    const user = await fetchAuthenticatedUser(token, queryClient);
+    setAuthenticatedUser(user);
+
+    // make sure refresh token calls are enabled
+    setRefresh(true);
 
     return true;
-  } catch (err) {
-    console.log(err);
+  } catch (_err) {
+    setToken(null);
+    setAuthenticatedUser(null);
+    setRefresh(false);
   }
 
   return false;

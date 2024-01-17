@@ -1,5 +1,8 @@
+import { QueryClient } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
 import { refreshTokenRequest } from "../api/authentication";
+import { AuthState } from "../authProvider";
+import { fetchAuthenticatedUser } from "./user";
 
 type DecodedToken = {
   iss: string;
@@ -9,41 +12,66 @@ type DecodedToken = {
   jti: string;
 };
 
-let token: string | null = null;
-let decodedToken: DecodedToken | null = null;
+export async function handleAuthToken(
+  {
+    token,
+    setToken,
+    authenticatedUser,
+    setAuthenticatedUser,
+    refresh,
+    setRefresh,
+  }: AuthState,
+  queryClient: QueryClient,
+): Promise<string | null> {
+  if (token && !isExpired(token.exp)) {
+    if (!authenticatedUser) {
+      const user = await fetchAuthenticatedUser(token.token, queryClient);
+      setAuthenticatedUser(user);
+    }
 
-// throws error if refresh fails
-export async function getToken(): Promise<string> {
-  if (token && decodedToken && !isExpired(decodedToken)) {
-    return token;
+    return token.token;
+  }
+
+  if (!refresh) {
+    // don't make unnecessary refresh calls
+    if (token) {
+      setToken(null);
+    }
+    if (authenticatedUser) {
+      setAuthenticatedUser(null);
+    }
+    return null;
   }
 
   try {
+    // try to use refresh token
     const newToken = await refreshTokenRequest();
-    setToken(newToken);
+    const exp = getExpiration(newToken);
+    setToken({ token: newToken, exp });
+
+    const user = await fetchAuthenticatedUser(newToken, queryClient);
+    setAuthenticatedUser(user);
 
     return newToken;
-  } catch (e) {
-    if (token && decodedToken) {
-      clearToken();
-      throw new Error("token is expired");
-    }
-    throw e;
+  } catch (_err) {
+    // there is no refresh token
+    setRefresh(false);
+
+    // clear old token and authenticated user
+    setToken(null);
+    setAuthenticatedUser(null);
+
+    return null;
   }
 }
 
-export function setToken(newToken: string): void {
-  decodedToken = decodeToken(newToken);
-  token = newToken;
+export function getExpiration(token: string): number {
+  const decodedToken = decodeToken(token);
+  return decodedToken ? decodedToken.exp : 0;
 }
 
-export function clearToken(): void {
-  token = null;
-  decodedToken = null;
-}
-
-function isExpired(decodedToken: DecodedToken): boolean {
-  return Date.now() > decodedToken.exp * 1000;
+export function isExpired(exp: number): boolean {
+  return Date.now() > exp * 1000;
 }
 
 function decodeToken(token: string): DecodedToken | null {

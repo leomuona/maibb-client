@@ -1,17 +1,26 @@
+import { QueryClient } from "@tanstack/react-query";
 import { logoutRequest } from "../api/authentication";
-import { clearToken, getToken } from "./token";
+import { AuthState } from "../authProvider";
+import { handleAuthToken } from "./token";
 
-export async function logout(): Promise<boolean> {
+export async function logout(
+  auth: AuthState,
+  queryClient: QueryClient,
+): Promise<void> {
+  const { setToken, setAuthenticatedUser, setRefresh } = auth;
   try {
-    const token = await getToken();
-    const result = await logoutRequest(token);
-    clearToken();
-
-    return result;
-  } catch (err) {
-    console.log(err);
-    clearToken();
+    const token = await handleAuthToken(auth, queryClient);
+    if (!token) {
+      // refresh failed, nothing to do
+      return;
+    }
+    await logoutRequest(token);
+  } catch (_err) {
+    // nothing
   }
 
-  return false;
+  // clear authentication
+  setToken(null);
+  setAuthenticatedUser(null);
+  setRefresh(false);
 }
