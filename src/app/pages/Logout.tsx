@@ -2,19 +2,16 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { logout } from "../auth/logout";
-import { useAuth } from "../authProvider";
 import { ROUTES } from "../routes";
 import { Loader } from "./Loader";
 
 export function Logout(): JSX.Element {
   const [loading, setLoading] = useState(true);
-
   const queryClient = useQueryClient();
-  const auth = useAuth();
 
   const doLogout = async () => {
-    await logout(auth, queryClient);
-    // TODO: some toast about logout
+    await logout(queryClient);
+    // TODO: add some toast about successful logout
     setLoading(false);
   };
 

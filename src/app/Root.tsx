@@ -1,12 +1,15 @@
 import { Global, ThemeProvider } from "@emotion/react";
-import { Suspense } from "react";
-import { Await, Outlet, useLoaderData } from "react-router-dom";
-import { RootLoaderReturnType } from "./loaders/rootLoader";
+import { useQuery } from "@tanstack/react-query";
+import { Outlet, useOutletContext } from "react-router-dom";
+import { AuthenticatedUser } from "./models/authenticatedUser";
 import { Loader } from "./pages/Loader";
+import { authenticatedUserQuery } from "./queries/authenticatedUserQuery";
 import { darkTheme } from "./theme/theme";
 
 export function Root(): JSX.Element {
-  const { authentication } = useLoaderData() as RootLoaderReturnType;
+  const { data: authenticatedUser, isLoading } = useQuery(
+    authenticatedUserQuery,
+  );
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -31,11 +34,27 @@ export function Root(): JSX.Element {
           },
         })}
       />
-      <Suspense fallback={<Loader />}>
-        <Await resolve={authentication}>
-          <Outlet />
-        </Await>
-      </Suspense>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Outlet context={createRootContext(authenticatedUser ?? null)} />
+      )}
     </ThemeProvider>
   );
+}
+
+function createRootContext(
+  authenticatedUser: AuthenticatedUser | null,
+): RootContext {
+  return {
+    authenticatedUser,
+  };
+}
+
+export type RootContext = {
+  authenticatedUser: AuthenticatedUser | null;
+};
+
+export function useRootContext(): RootContext {
+  return useOutletContext<RootContext>();
 }

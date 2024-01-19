@@ -1,5 +1,6 @@
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 
+import { getToken } from "../auth/token";
 import { getAxios } from "./axios";
 
 type ApiClient = {
@@ -32,7 +33,9 @@ type ApiClient = {
   ) => Promise<AxiosResponse<T>>;
 };
 
-export function getApiClient(token: string | null): ApiClient {
+export function getApiClient(): ApiClient {
+  const token = getToken();
+
   return {
     get: async <T>(
       url: string,

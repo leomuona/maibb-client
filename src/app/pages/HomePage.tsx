@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../authProvider";
+import { useRootContext } from "../Root";
 import { ROUTES } from "../routes";
 
 export function HomePage(): JSX.Element {
-  const { authenticatedUser } = useAuth();
+  const { authenticatedUser } = useRootContext();
 
   const welcomeText = authenticatedUser
     ? `Moikkulis ${authenticatedUser.name}!`

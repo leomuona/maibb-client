@@ -1,23 +1,23 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useRootContext } from "../Root";
 import { login } from "../auth/login";
-import { useAuth } from "../authProvider";
 import { LoginForm } from "../forms/LoginForm";
 import { ROUTES } from "../routes";
 
 export function LoginPage(): JSX.Element {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const auth = useAuth();
+  const { authenticatedUser } = useRootContext();
 
-  if (auth.authenticatedUser) {
+  if (authenticatedUser) {
     // user has already logged in
     return <Navigate to={ROUTES.root} />;
   }
 
   const doLogin = async (username: string, password: string) => {
-    const result = await login(username, password, auth, queryClient);
+    const result = await login(username, password, queryClient);
     if (result) {
       navigate(ROUTES.root);
     }

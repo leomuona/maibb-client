@@ -1,9 +1,9 @@
 import { Link, Navigate } from "react-router-dom";
-import { useAuth } from "../authProvider";
+import { useRootContext } from "../Root";
 import { ROUTES } from "../routes";
 
-export function UserPage(): JSX.Element | null {
-  const { authenticatedUser } = useAuth();
+export function UserPage(): JSX.Element {
+  const { authenticatedUser } = useRootContext();
 
   if (!authenticatedUser) {
     return <Navigate to={ROUTES.root} />;
