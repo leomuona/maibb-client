@@ -9,7 +9,7 @@ export async function loginRequest(
   username: string,
   password: string,
 ): Promise<string> {
-  const response = await getApiClient().post<LoginResponse>("/auth/login", {
+  const response = await getApiClient().post<LoginResponse>("/user/login", {
     username,
     password,
   });
@@ -18,14 +18,14 @@ export async function loginRequest(
 }
 
 export async function logoutRequest(): Promise<boolean> {
-  const response = await getApiClient().get("/auth/logout");
+  const response = await getApiClient().get("/user/logout");
 
   return response.status === 200;
 }
 
 export async function authenticatedUserRequest(): Promise<AuthenticatedUser> {
   const response = await getApiClient().get<AuthenticatedUser>(
-    "/auth/authenticateduser",
+    "/user/authenticated",
   );
 
   return response.data;
