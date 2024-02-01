@@ -1,5 +1,11 @@
-import { AuthenticatedUser } from "../models/authenticatedUser";
+import { User } from "../models/user";
 import { getApiClient } from "./apiClient";
+
+export type RegisterUserData = {
+  name: string;
+  username: string;
+  password: string;
+};
 
 type LoginResponse = {
   token: string;
@@ -23,10 +29,16 @@ export async function logoutRequest(): Promise<boolean> {
   return response.status === 200;
 }
 
-export async function authenticatedUserRequest(): Promise<AuthenticatedUser> {
-  const response = await getApiClient().get<AuthenticatedUser>(
-    "/user/authenticated",
-  );
+export async function authenticatedUserRequest(): Promise<User> {
+  const response = await getApiClient().get<User>("/user/authenticated");
+
+  return response.data;
+}
+
+export async function registerUserRequest(
+  data: RegisterUserData,
+): Promise<User> {
+  const response = await getApiClient().post<User>("/user/register", data);
 
   return response.data;
 }

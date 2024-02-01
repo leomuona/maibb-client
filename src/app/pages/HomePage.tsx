@@ -8,19 +8,23 @@ export function HomePage(): JSX.Element {
   const welcomeText = authenticatedUser
     ? `Moikkulis ${authenticatedUser.name}!`
     : "Tervetuloa!";
-  const showLoginLink = !authenticatedUser;
-  const showAuthenticatedLinks = !!authenticatedUser;
+  const isAuthenticated = !!authenticatedUser;
 
   return (
     <div>
       <h1>Etusivu</h1>
       <p>{welcomeText}</p>
-      {showLoginLink && (
-        <p>
-          <Link to={ROUTES.login}>Kirjaudu sisään</Link>
-        </p>
+      {!isAuthenticated && (
+        <>
+          <p>
+            <Link to={ROUTES.login}>Kirjaudu sisään</Link>
+          </p>
+          <p>
+            <Link to={ROUTES.register}>Rekisteröidy</Link>
+          </p>
+        </>
       )}
-      {showAuthenticatedLinks && (
+      {isAuthenticated && (
         <>
           <p>
             <Link to={ROUTES.user}>Käyttäjäsivulle</Link>

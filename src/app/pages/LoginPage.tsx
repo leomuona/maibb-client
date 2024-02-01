@@ -2,9 +2,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useRootContext } from "../Root";
-import { login } from "../auth/login";
 import { LoginForm } from "../forms/LoginForm";
 import { ROUTES } from "../routes";
+import { login } from "../user/login";
 
 export function LoginPage(): JSX.Element {
   const navigate = useNavigate();

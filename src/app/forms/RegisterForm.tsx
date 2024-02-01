@@ -1,29 +1,40 @@
 import styled from "@emotion/styled";
 import { useForm } from "react-hook-form";
 
-type FormData = {
+export type FormData = {
+  name: string;
   username: string;
   password: string;
+  repeatPassword: string;
 };
 
 type Props = {
   onSubmit: (data: FormData) => void;
 };
 
-export function LoginForm({ onSubmit }: Props): JSX.Element {
+export function RegisterForm({ onSubmit }: Props): JSX.Element {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { isValid },
   } = useForm<FormData>({
     defaultValues: {
+      name: "",
       username: "",
       password: "",
+      repeatPassword: "",
     },
   });
 
   return (
     <StyledForm onSubmit={handleSubmit(onSubmit)}>
+      <label htmlFor="name">Nimi:</label>
+      <input
+        type="text"
+        {...register("name", { required: true })}
+        autoComplete="off"
+      />
       <label htmlFor="username">Käyttäjätunnus:</label>
       <input
         type="text"
@@ -32,7 +43,19 @@ export function LoginForm({ onSubmit }: Props): JSX.Element {
       />
       <label htmlFor="password">Salasana:</label>
       <input type="password" {...register("password", { required: true })} />
-      <input type="submit" value="Kirjaudu" disabled={!isValid} />
+      <label htmlFor="repeatPassword">Vahvista salasana:</label>
+      <input
+        type="password"
+        {...register("repeatPassword", {
+          required: true,
+          validate: (val: string) => {
+            if (watch("password") !== val) {
+              return "Salasanat eivät täsmää";
+            }
+          },
+        })}
+      />
+      <input type="submit" value="Rekisteröidy" disabled={!isValid} />
     </StyledForm>
   );
 }

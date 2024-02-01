@@ -1,7 +1,7 @@
 import { Global, ThemeProvider } from "@emotion/react";
 import { useQuery } from "@tanstack/react-query";
 import { Outlet, useOutletContext } from "react-router-dom";
-import { AuthenticatedUser } from "./models/authenticatedUser";
+import { User } from "./models/user";
 import { Loader } from "./pages/Loader";
 import { authenticatedUserQuery } from "./queries/authenticatedUserQuery";
 import { darkTheme } from "./theme/theme";
@@ -43,16 +43,14 @@ export function Root(): JSX.Element {
   );
 }
 
-function createRootContext(
-  authenticatedUser: AuthenticatedUser | null,
-): RootContext {
+function createRootContext(authenticatedUser: User | null): RootContext {
   return {
     authenticatedUser,
   };
 }
 
 export type RootContext = {
-  authenticatedUser: AuthenticatedUser | null;
+  authenticatedUser: User | null;
 };
 
 export function useRootContext(): RootContext {

@@ -1,6 +1,6 @@
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 
-import { getToken } from "../auth/token";
+import { getToken } from "../user/token";
 import { getAxios } from "./axios";
 
 type ApiClient = {

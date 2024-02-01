@@ -5,6 +5,7 @@ import { ErrorPage } from "./pages/ErrorPage";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { Logout } from "./pages/Logout";
+import { RegisterPage } from "./pages/RegisterPage";
 import { UserPage } from "./pages/UserPage";
 import { ROUTES } from "./routes";
 
@@ -26,6 +27,10 @@ export function createRoutes(_queryClient: QueryClient): RouteObject[] {
         {
           path: ROUTES.logout,
           element: <Logout />,
+        },
+        {
+          path: ROUTES.register,
+          element: <RegisterPage />,
         },
         {
           path: ROUTES.user,

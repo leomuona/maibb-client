@@ -1,5 +1,5 @@
 import { QueryClient } from "@tanstack/react-query";
-import { loginRequest } from "../api/authentication";
+import { loginRequest } from "../api/user";
 import { clearToken, setToken } from "./token";
 
 export async function login(

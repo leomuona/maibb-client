@@ -1,4 +1,4 @@
-import { authenticatedUserRequest } from "../api/authentication";
+import { authenticatedUserRequest } from "../api/user";
 
 export const authenticatedUserQuery = {
   queryKey: ["authenticatedUser"],

@@ -1,8 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { logout } from "../auth/logout";
 import { ROUTES } from "../routes";
+import { logout } from "../user/logout";
 import { Loader } from "./Loader";
 
 export function Logout(): JSX.Element {
